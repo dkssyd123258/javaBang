@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!--mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm-->
+<!-- mapper 태그 선언 -->
+<!--mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm-->
+	<!-- namespace 속성값으로 [DAO 인터페이스명]이 오며 -->
+	<!-- [DAO 인터페이스] 메소드명과 동일한 id 값을 소유한 태그를 내포하고 있다. -->
+<!--mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm-->
+<mapper namespace="com.naver.erp.RoomListDAO">
+
+	<!--**************************************************************************-->
+	<!-- 게시판 검색하는 select 문을 내포한 select 태그 선언 -->
+	<!-- sql태그의 id를 제외한 나머지 태그의 id는 boardDAO의 메소드명과 동일해야한다 -->
+	<!--**************************************************************************-->
+	<select id="getRoomList" parameterType="int" resultType="com.naver.erp.RoomListDTO">
+		select
+		 sr_no as "sr_no" 
+		 ,s_no as "s_no" 
+		,sr_mainaddr  as "sr_mainaddr" 
+		,sr_addrflow as "sr_addrflow" 
+		,sr_roomsize as "sr_roomsize" 
+		,sr_builddate  as "sr_builddate" 
+		,(select ce.ELV_AVAILABLE from CODE_ELV ce,SELL_ROOM_ELV sre where ce.ELV_AVAILABLE_CODE=sre.ELV_AVAILABLE_CODE and sr_no=#{sr_no}) as "elv_available"
+		,(select ch.hc_type from code_hc_type ch,sell_room_hc_type srh where ch.hc_type_code=srh.hc_type_code and sr_no=#{sr_no}) as "hc_type"
+		,(select cpa.PET_AVAILABILITY from code_pet_availability cpa,sell_room_pet_availability srpa where cpa.pet_availability_code=srpa.pet_availability_code and sr_no=#{sr_no}) as "pet_available"
+		
+		from SELL_ROOM where sr_no=#{sr_no}
+		</select>
+
+</mapper>	
+	
